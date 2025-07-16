@@ -1,9 +1,4 @@
 {
   "date": "2025-07-16",
-  "holiday": false,
-  "weekend": false,
-  "payday": false,
-  "deadline": false,
-  "meeting": false,
-  "special_event": true
+  "opex_minus_one": false
 }
