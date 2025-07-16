@@ -52,12 +52,7 @@ function main() {
       // No data for today - return date with all false values
       apiResponse = {
         date: new Date().toISOString().split('T')[0],
-        holiday: false,
-        weekend: false,
-        payday: false,
-        deadline: false,
-        meeting: false,
-        special_event: false
+        opex_minus_one: false
       };
     }
     
