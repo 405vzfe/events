@@ -1,0 +1,8 @@
+date,holiday,weekend,payday,deadline,meeting,special_event
+2025-01-01,true,false,false,false,false,true
+2025-01-02,false,false,false,false,true,false
+2025-01-03,false,false,false,true,false,false
+2025-01-15,true,false,true,false,false,false
+2025-07-16,false,false,false,false,false,true
+2025-07-17,false,false,false,false,true,false
+2025-12-25,true,false,false,false,false,true

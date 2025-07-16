@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events API</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .endpoint {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .data-display {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .boolean-true { color: #2e7d32; font-weight: bold; }
+        .boolean-false { color: #d32f2f; }
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        button:hover { background: #005999; }
+    </style>
+</head>
+<body>
+    <h1>Events API</h1>
+    
+    <h2>API Endpoint</h2>
+    <div class="endpoint">
+        GET https://405vzfe.github.io/events/events.json
+    </div>
+    
+    <button onclick="fetchData()">Load Today's Data</button>
+    
+    <div id="data-display" class="data-display" style="display: none;">
+        <h3>Today's Events Status</h3>
+        <div id="data-content"></div>
+    </div>
+    
+    <h2>Usage</h2>
+    <p>This API returns JSON data about events. The data is updated daily at 6 AM UTC.</p>
+    
+    <h3>Response Format</h3>
+    <pre>{
+  "date": "2025-07-16",
+  "lastUpdated": "2025-07-16T06:00:00Z",
+  "data": {
+    "date": "2025-07-16",
+    "holiday": false,
+    "weekend": false,
+    "payday": false,
+    "deadline": false,
+    "meeting": false,
+    "special_event": true
+  },
+  "allData": [/* full dataset */]
+}</pre>
+
+    <script>
+        async function fetchData() {
+            try {
+                const response = await fetch('./events.json');
+                const data = await response.json();
+                
+                const display = document.getElementById('data-display');
+                const content = document.getElementById('data-content');
+                
+                let html = `<p><strong>Date:</strong> ${data.date}</p>`;
+                html += `<p><strong>Last Updated:</strong> ${new Date(data.lastUpdated).toLocaleString()}</p>`;
+                
+                if (data.data.message) {
+                    html += `<p>${data.data.message}</p>`;
+                } else {
+                    html += '<h4>Status:</h4><ul>';
+                    Object.entries(data.data).forEach(([key, value]) => {
+                        if (key !== 'date') {
+                            const className = value ? 'boolean-true' : 'boolean-false';
+                            html += `<li><strong>${key}:</strong> <span class="${className}">${value}</span></li>`;
+                        }
+                    });
+                    html += '</ul>';
+                }
+                
+                content.innerHTML = html;
+                display.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                alert('Error loading data. Make sure the API is set up correctly.');
+            }
+        }
+    </script>
+</body>
+</html>
