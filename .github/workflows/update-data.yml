@@ -1,59 +1,67 @@
-name: Update Events and Deploy to Pages
+const fs = require('fs');
+const path = require('path');
 
-on:
-  push:
-    branches: ["main"]
-  schedule:
-    - cron: '0 6 * * *'
-  workflow_dispatch:
+function parseCSV(csvText) {
+  const lines = csvText.trim().split('\n');
+  const headers = lines[0].split(',').map(h => h.trim());
+  
+  const data = lines.slice(1).map(line => {
+    const values = line.split(',').map(v => v.trim());
+    const row = {};
+    
+    headers.forEach((header, index) => {
+      const value = values[index] || '';
+      
+      // Convert boolean-like values
+      if (header !== 'date') {
+        row[header] = value.toLowerCase() === 'true' || value === '1';
+      } else {
+        row[header] = value;
+      }
+    });
+    
+    return row;
+  });
+  
+  return data;
+}
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+function getTodaysData(data) {
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+  return data.find(row => row.date === today);
+}
 
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+function main() {
+  try {
+    // Read CSV file
+    const csvPath = path.join(__dirname, 'data/events.csv');
+    const csvText = fs.readFileSync(csvPath, 'utf8');
+    
+    // Parse CSV
+    const data = parseCSV(csvText);
+    
+    // Get today's data
+    const todaysData = getTodaysData(data);
+    
+    // Create API response
+    const apiResponse = {
+      date: new Date().toISOString().split('T')[0],
+      lastUpdated: new Date().toISOString(),
+      data: todaysData || { date: new Date().toISOString().split('T')[0], message: 'No data for today' },
+      allData: data // Include all data for reference
+    };
+    
+    // Write JSON file
+    const apiPath = path.join(__dirname, 'events.json');
+    fs.writeFileSync(apiPath, JSON.stringify(apiResponse, null, 2));
+    
+    console.log('✅ Successfully updated events.json');
+    console.log('📅 Today\'s data:', todaysData || 'No data for today');
+    
+  } catch (error) {
+    console.error('❌ Error processing data:', error);
+    process.exit(1);
+  }
+}
 
-jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          
-      - name: Process CSV and generate JSON
-        run: node process-data.js
-        
-      - name: Commit updated JSON
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add events.json
-          if ! git diff --cached --quiet; then
-            git commit -m "Auto-update events data $(date)"
-            git push
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-        
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-          
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+main();
