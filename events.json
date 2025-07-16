@@ -1,0 +1,78 @@
+{
+  "date": "2025-07-16",
+  "lastUpdated": "2025-07-16T08:15:34.373Z",
+  "data": {
+    "date": "2025-07-16",
+    "holiday": false,
+    "weekend": false,
+    "payday": false,
+    "deadline": false,
+    "meeting": false,
+    "special_event": true
+  },
+  "allData": [
+    {
+      "date": "2025-01-01",
+      "holiday": true,
+      "weekend": false,
+      "payday": false,
+      "deadline": false,
+      "meeting": false,
+      "special_event": true
+    },
+    {
+      "date": "2025-01-02",
+      "holiday": false,
+      "weekend": false,
+      "payday": false,
+      "deadline": false,
+      "meeting": true,
+      "special_event": false
+    },
+    {
+      "date": "2025-01-03",
+      "holiday": false,
+      "weekend": false,
+      "payday": false,
+      "deadline": true,
+      "meeting": false,
+      "special_event": false
+    },
+    {
+      "date": "2025-01-15",
+      "holiday": true,
+      "weekend": false,
+      "payday": true,
+      "deadline": false,
+      "meeting": false,
+      "special_event": false
+    },
+    {
+      "date": "2025-07-16",
+      "holiday": false,
+      "weekend": false,
+      "payday": false,
+      "deadline": false,
+      "meeting": false,
+      "special_event": true
+    },
+    {
+      "date": "2025-07-17",
+      "holiday": false,
+      "weekend": false,
+      "payday": false,
+      "deadline": false,
+      "meeting": true,
+      "special_event": false
+    },
+    {
+      "date": "2025-12-25",
+      "holiday": true,
+      "weekend": false,
+      "payday": false,
+      "deadline": false,
+      "meeting": false,
+      "special_event": true
+    }
+  ]
+}
