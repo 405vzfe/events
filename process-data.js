@@ -34,7 +34,7 @@ function getTodaysData(data) {
 function main() {
   try {
     // Read CSV file
-    const csvPath = path.join(__dirname, 'events.csv');
+    const csvPath = path.join(__dirname, 'data/events.csv');
     const csvText = fs.readFileSync(csvPath, 'utf8');
     
     // Parse CSV
