@@ -43,13 +43,23 @@ function main() {
     // Get today's data
     const todaysData = getTodaysData(data);
     
-    // Create API response
-    const apiResponse = {
-      date: new Date().toISOString().split('T')[0],
-      lastUpdated: new Date().toISOString(),
-      data: todaysData || { date: new Date().toISOString().split('T')[0], message: 'No data for today' },
-      allData: data // Include all data for reference
-    };
+    // Create API response in flat format
+    let apiResponse;
+    if (todaysData) {
+      // Return today's data as a flat object
+      apiResponse = todaysData;
+    } else {
+      // No data for today - return date with all false values
+      apiResponse = {
+        date: new Date().toISOString().split('T')[0],
+        holiday: false,
+        weekend: false,
+        payday: false,
+        deadline: false,
+        meeting: false,
+        special_event: false
+      };
+    }
     
     // Write JSON file
     const apiPath = path.join(__dirname, 'events.json');
