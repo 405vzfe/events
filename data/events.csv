@@ -207,7 +207,7 @@ date,opex_minus_one,vixpiration_minus_one,vixpiration,vixpiration_plus_one
 2025-07-25,false,false,false,false
 2025-07-26,false,false,false,false
 2025-07-27,false,false,false,false
-2025-07-28,true,false,false,false
+2025-07-28,false,false,false,false
 2025-07-29,false,false,false,false
 2025-07-30,false,false,false,false
 2025-07-31,false,false,false,false
