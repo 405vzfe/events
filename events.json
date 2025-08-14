@@ -1,6 +1,6 @@
 {
-  "date": "2025-08-13",
-  "opex_minus_one": false,
+  "date": "2025-08-14",
+  "opex_minus_one": true,
   "vixpiration_minus_one": false,
   "vixpiration": false,
   "vixpiration_plus_one": false
