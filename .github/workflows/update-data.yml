@@ -1,10 +1,18 @@
-name: Update Events and Deploy to Pages
+# Regenerates events.json for the current date and publishes it to GitHub Pages.
+# This is the ONLY workflow in this repo. A second, identical copy (static.yml)
+# used to run alongside it; the two shared a concurrency group, so one stranded
+# run blocked the other and both stalled.
+name: Update events data and deploy to Pages
 
 on:
   push:
     branches: ["main"]
   schedule:
-    - cron: '0 6 * * *'
+    # Three attempts a day. GitHub cron is best-effort and has been running 45 min
+    # to 2 h late on this repo, so the last attempt still lands before the US cash
+    # open at 13:30 UTC. Extra runs are idempotent and commit nothing if unchanged.
+    # Offset off the hour because :00 is the most contended slot.
+    - cron: '17 3,7,11 * * *'
   workflow_dispatch:
 
 permissions:
@@ -12,48 +20,67 @@ permissions:
   pages: write
   id-token: write
 
+# A newer run supersedes an older one. GitHub occasionally strands a job in the
+# queue; with cancel-in-progress false, that stranded run blocked every later run
+# indefinitely and the feed went stale.
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry.outputs.page_url }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-        
+        uses: actions/checkout@v7
+
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: '18'
-          
+          node-version: '22'
+
       - name: Process CSV and generate JSON
         run: node process-data.js
-        
+
       - name: Commit updated JSON
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add events.json
           if ! git diff --cached --quiet; then
-            git commit -m "Auto-update events data $(date)"
+            git commit -m "Auto-update events data $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
             git push
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Setup Pages
-        uses: actions/configure-pages@v5
-        
+        uses: actions/configure-pages@v6
+
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: '.'
-          
+
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+
+      # The artifact API is eventually consistent. deploy-pages has reported
+      # "Found 0 artifact(s)" seconds after a successful upload and does not retry
+      # that error itself. This accounted for every observed run failure.
+      - name: Wait before retry
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 30
+
+      - name: Deploy to GitHub Pages (retry)
+        id: deployment_retry
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+
+      # Runs last so a low-runway alert never blocks the day's data from shipping.
+      - name: Check CSV runway
+        run: node scripts/check-runway.js 90
