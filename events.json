@@ -1,7 +1,8 @@
 {
-  "date": "2026-10-01",
+  "date": "2026-10-02",
   "opex_minus_one": false,
   "vixpiration_minus_one": false,
   "vixpiration": false,
-  "vixpiration_plus_one": false
+  "vixpiration_plus_one": false,
+  "eoq_plus_one": false
 }
