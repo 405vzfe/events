@@ -59,9 +59,11 @@ function observed(d) {
 }
 
 // NYSE full-day closures. Excludes ad hoc closures (funerals, weather, 2001-09-11).
+// A Saturday New Year's Day is not observed: NYSE stays open on Dec 31 (year end).
 function nyseHolidays(year) {
+  const newYear = utc(year, 0, 1);
   return [
-    observed(utc(year, 0, 1)), // New Year's Day
+    ...(newYear.getUTCDay() === 6 ? [] : [observed(newYear)]), // New Year's Day
     nthWeekday(year, 0, 1, 3), // Martin Luther King Jr. Day
     nthWeekday(year, 1, 1, 3), // Washington's Birthday
     addDays(easter(year), -2), // Good Friday

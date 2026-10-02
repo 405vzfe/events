@@ -18,8 +18,9 @@ A one-file JSON feed that tells a consumer which market-event flags apply to the
 ## How it works
 
 `data/events.csv` holds one row per calendar day. `process-data.js` selects the row for the
-current UTC date and writes it to `events.json`. A GitHub Actions workflow runs this three
-times a day and publishes the result to GitHub Pages.
+current UTC date and writes it to `events.json`. A GitHub Actions workflow is scheduled to run
+this hourly from 00:17 to 12:17 UTC (best-effort; GitHub cron runs late or drops slots) and
+publishes the result to GitHub Pages.
 
 ## Flag definitions
 

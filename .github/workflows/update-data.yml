@@ -8,11 +8,12 @@ on:
   push:
     branches: ["main"]
   schedule:
-    # Three attempts a day. GitHub cron is best-effort and has been running 45 min
-    # to 2 h late on this repo, so the last attempt still lands before the US cash
-    # open at 13:30 UTC. Extra runs are idempotent and commit nothing if unchanged.
-    # Offset off the hour because :00 is the most contended slot.
-    - cron: '17 3,7,11 * * *'
+    # Hourly from 00:17 to 12:17 UTC. GitHub cron is best-effort: on this repo it
+    # has dropped slots and run 5-7 h late (Sep 2026 the old 3-slot schedule landed
+    # only one run before the US cash open at 13:30 UTC). More slots means more
+    # chances one lands before the open. Extra runs are idempotent and commit
+    # nothing if unchanged. Offset off the hour because :00 is the most contended slot.
+    - cron: '17 0-12 * * *'
   workflow_dispatch:
 
 permissions:
@@ -53,7 +54,9 @@ jobs:
           git add events.json
           if ! git diff --cached --quiet; then
             git commit -m "Auto-update events data $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
-            git push
+            # A rejected push (another run pushed first) must not skip the deploy:
+            # the Pages artifact is built from this working tree, not the commit.
+            git push || echo "::warning::push rejected, deploying anyway"
           fi
 
       - name: Setup Pages
