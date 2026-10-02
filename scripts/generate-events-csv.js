@@ -1,4 +1,5 @@
-// Generates data/events.csv: one row per calendar day with OPEX and VIX expiration flags.
+// Generates data/events.csv: one row per calendar day with OPEX, VIX expiration and
+// quarter-boundary flags.
 //
 //   node scripts/generate-events-csv.js <startYear> <endYear> > data/events.csv
 //
@@ -7,6 +8,7 @@
 //                       if the NYSE is closed that Friday (Good Friday, Juneteenth).
 //   vixpiration(m)      opex(m+1) minus 30 days, rolled back to the prior trading day
 //                       if the NYSE is closed that day.
+//   eoq(q)              last trading day of quarter q (Mar, Jun, Sep, Dec).
 //   *_minus_one         the prior trading day.
 //   *_plus_one          the next trading day.
 //
@@ -110,6 +112,9 @@ const opex = (year, month, holidays) =>
 const vixpiration = (year, month, holidays) =>
   onOrPrevTradingDay(addDays(opex(year, month + 1, holidays), -30), holidays);
 
+// End of quarter: last trading day of a quarter-end month (2, 5, 8, 11).
+const eoq = (year, month, holidays) => onOrPrevTradingDay(utc(year, month + 1, 0), holidays);
+
 function main() {
   const startYear = Number(process.argv[2]);
   const endYear = Number(process.argv[3]);
@@ -135,6 +140,7 @@ function main() {
       mark(prevTradingDay(v, holidays), 'vixpiration_minus_one');
       mark(v, 'vixpiration');
       mark(nextTradingDay(v, holidays), 'vixpiration_plus_one');
+      if ((m + 12) % 3 === 2) mark(nextTradingDay(eoq(y, m, holidays), holidays), 'eoq_plus_one');
     }
   }
 
@@ -144,6 +150,7 @@ function main() {
     'vixpiration_minus_one',
     'vixpiration',
     'vixpiration_plus_one',
+    'eoq_plus_one',
   ];
   const lines = [headers.join(',')];
   for (let d = utc(startYear, 0, 1); d.getUTCFullYear() <= endYear; d = addDays(d, 1)) {

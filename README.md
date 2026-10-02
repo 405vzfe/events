@@ -10,7 +10,8 @@ A one-file JSON feed that tells a consumer which market-event flags apply to the
   "opex_minus_one": false,
   "vixpiration_minus_one": false,
   "vixpiration": false,
-  "vixpiration_plus_one": false
+  "vixpiration_plus_one": false,
+  "eoq_plus_one": false
 }
 ```
 
@@ -28,6 +29,7 @@ times a day and publishes the result to GitHub Pages.
 | `vixpiration` | VIX monthly settlement: 30 days before the SPX expiration it references. |
 | `vixpiration_minus_one` | The trading day before `vixpiration`. |
 | `vixpiration_plus_one` | The trading day after `vixpiration`. |
+| `eoq_plus_one` | The first trading day of a quarter (Jan, Apr, Jul, Oct). |
 
 Both expirations roll back to the prior trading day when the NYSE is closed. Adjacency is
 measured in **trading days, not calendar days**, so a flag never lands on a market holiday.
