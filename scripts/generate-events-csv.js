@@ -1,5 +1,5 @@
-// Generates data/events.csv: one row per calendar day with OPEX, VIX expiration and
-// quarter-boundary flags.
+// Generates data/events.csv: one row per calendar day with OPEX, VIX expiration,
+// month/quarter-boundary, FOMC, CPI and early-close flags.
 //
 //   node scripts/generate-events-csv.js <startYear> <endYear> > data/events.csv
 //
@@ -8,11 +8,20 @@
 //                       if the NYSE is closed that Friday (Good Friday, Juneteenth).
 //   vixpiration(m)      opex(m+1) minus 30 days, rolled back to the prior trading day
 //                       if the NYSE is closed that day.
-//   eoq(q)              last trading day of quarter q (Mar, Jun, Sep, Dec).
+//   monthEnd(m)         last trading day of month m. Flagged eoq in Mar/Jun/Sep/Dec and
+//                       eom in every other month (never both, matching xiles.io).
+//   fomc, cpi,          dates from data/fomc.txt, data/cpi.txt, data/early_close.txt
+//   earlyClose          (see scripts/date-lists.js). fomcPlusOne is the next trading day.
 //   *_minus_one         the prior trading day.
 //   *_plus_one          the next trading day.
 //
+// The xiles.io keys (earlyClose, fomc, fomcPlusOne, cpi, eom, eoq, opex) keep its camelCase
+// names so this feed can stand in for it. They match the backtester's input_spx_ohlc.csv:
+// FOMC/CPI/OPEX code 100, FOMC 101, EOM 100 (eom) / 200 (eoq), CloseTime 13.
+//
 // Verified against the hand-built 2025-2026 rows: all 730 match exactly.
+
+const { readLists } = require('./date-lists');
 
 const DAY_MS = 86400000;
 
@@ -114,8 +123,9 @@ const opex = (year, month, holidays) =>
 const vixpiration = (year, month, holidays) =>
   onOrPrevTradingDay(addDays(opex(year, month + 1, holidays), -30), holidays);
 
-// End of quarter: last trading day of a quarter-end month (2, 5, 8, 11).
-const eoq = (year, month, holidays) => onOrPrevTradingDay(utc(year, month + 1, 0), holidays);
+// Last trading day of a month. Quarter-end months are 2, 5, 8, 11.
+const monthEnd = (year, month, holidays) => onOrPrevTradingDay(utc(year, month + 1, 0), holidays);
+const isQuarterEnd = (month) => (month + 12) % 3 === 2;
 
 function main() {
   const startYear = Number(process.argv[2]);
@@ -138,11 +148,28 @@ function main() {
     for (let m = -1; m <= 12; m++) {
       const o = opex(y, m, holidays);
       const v = vixpiration(y, m, holidays);
+      const me = monthEnd(y, m, holidays);
+      mark(o, 'opex');
       mark(prevTradingDay(o, holidays), 'opex_minus_one');
       mark(prevTradingDay(v, holidays), 'vixpiration_minus_one');
       mark(v, 'vixpiration');
       mark(nextTradingDay(v, holidays), 'vixpiration_plus_one');
-      if ((m + 12) % 3 === 2) mark(nextTradingDay(eoq(y, m, holidays), holidays), 'eoq_plus_one');
+      if (isQuarterEnd(m)) {
+        mark(me, 'eoq');
+        mark(nextTradingDay(me, holidays), 'eoq_plus_one');
+      } else {
+        mark(me, 'eom');
+      }
+    }
+  }
+
+  // A listed date on a closed day is a typo; fail rather than publish a flag nobody trades.
+  for (const [field, list] of Object.entries(readLists())) {
+    for (const date of list.dates) {
+      const d = new Date(`${date}T00:00:00Z`);
+      if (!isTradingDay(d, holidays)) throw new Error(`${list.file}: ${date} is not an NYSE trading day`);
+      mark(d, field);
+      if (field === 'fomc') mark(nextTradingDay(d, holidays), 'fomcPlusOne');
     }
   }
 
@@ -153,6 +180,13 @@ function main() {
     'vixpiration',
     'vixpiration_plus_one',
     'eoq_plus_one',
+    'earlyClose',
+    'fomc',
+    'fomcPlusOne',
+    'cpi',
+    'eom',
+    'eoq',
+    'opex',
   ];
   const lines = [headers.join(',')];
   for (let d = utc(startYear, 0, 1); d.getUTCFullYear() <= endYear; d = addDays(d, 1)) {

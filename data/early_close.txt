@@ -1,0 +1,18 @@
+# NYSE 1:00 pm early closes. Feed key: earlyClose.
+# covers through: 2028-12-31
+# source: https://www.nyse.com/markets/hours-calendars (current page, covers 2026-2028, fetched 2026-10-02)
+# source: http://web.archive.org/web/20250527233818/https://www.nyse.com/markets/hours-calendars (2025 footnotes)
+# All early closes are 1:00 p.m. ET (1:15 p.m. eligible options).
+# Not early closes, for reference: 2026-07-03 holiday (Jul 4 observed, no Jul 2 early close); 2027-07-05 and
+#   2027-12-24 holidays (no early close Jul 2 or Dec 23, 2027); 2028 no Christmas Eve early close listed (Dec 25 is Mon).
+#   2028-01-01 Sat: no New Year holiday observed.
+#   2025-12-24/26: NYSE kept normal schedule despite federal-employee closure EO (Dec 24 stayed 1pm, Dec 26 full day).
+#   2025-01-09 full-day closure (Carter national day of mourning), not an early close (not from sources above).
+2025-07-03
+2025-11-28
+2025-12-24
+2026-11-27
+2026-12-24
+2027-11-26
+2028-07-03
+2028-11-24

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { readLists, LIST_FIX_HINT } = require('./scripts/date-lists');
 
 const CSV_PATH = path.join(__dirname, 'data/events.csv');
 const OUT_PATH = path.join(__dirname, 'events.json');
@@ -43,6 +44,16 @@ function main() {
     console.error(`CSV covers ${data[0].date} through ${data[data.length - 1].date}.`);
     console.error('Regenerate it: node scripts/generate-events-csv.js <startYear> <endYear> > data/events.csv');
     process.exit(1);
+  }
+
+  // Past a list's "covers through" its flag reads false whether or not the event happens.
+  // Publish anyway: exiting here would leave yesterday's file live, and since consumers
+  // don't check `date` that freezes EVERY flag (a stale eoq=true would read true all week).
+  // check-runway.js fails the workflow after the deploy, so this stays loud.
+  for (const list of Object.values(readLists())) {
+    if (today > list.coversThrough) {
+      console.error(`::error::${list.file} covers through ${list.coversThrough}; its flag is unknown today. ${LIST_FIX_HINT}`);
+    }
   }
 
   fs.writeFileSync(OUT_PATH, JSON.stringify(todaysData, null, 2) + '\n');

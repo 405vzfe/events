@@ -1,0 +1,42 @@
+# BLS CPI release days (08:30 ET). Feed key: cpi.
+# Covers through 2026-12-31: BLS's published release calendar runs to the end of 2026.
+# Add the 2027 schedule when BLS publishes it (bls.gov/schedule/2027).
+# BLS reschedules releases during funding lapses (2025: one cancelled, two moved). Re-check
+#   bls.gov/schedule/news_release/cpi.htm if a lapse is in the news.
+# covers through: 2026-12-31
+# source: https://www.bls.gov/schedule/news_release/cpi.htm (current schedule, Nov 2025 ref month -> Nov 2026 ref month)
+# source: https://www.bls.gov/bls/news-release/cpi.htm (archive of actual CPI releases, 2025-2026)
+# source: https://www.bls.gov/bls/2025-lapse-revised-release-dates.htm (revised dates after 2025 and 2026 appropriations lapses)
+# source: https://www.bls.gov/bls/092025-cpi-reschedule-notice.htm (Sep 2025 CPI rescheduled to 2025-10-24)
+# source: http://web.archive.org/web/20250907060659/https://www.bls.gov/schedule/news_release/cpi.htm (pre-shutdown original schedule)
+# All releases 08:30 ET. 2027 schedule NOT yet published by BLS as of 2026-10-02 (bls.gov/schedule/2027 is 404; bls.ics ends 2026-12-30).
+# Actual release dates. Anomalies:
+#   Sep 2025 CPI: originally 2025-10-15, released 2025-10-24 (rescheduled during shutdown for SSA COLA).
+#   Oct 2025 CPI: originally 2025-11-13, CANCELED, never published (no line below).
+#   Nov 2025 CPI: originally 2025-12-10, released 2025-12-18.
+#   Dec 2025 CPI: 2026-01-13, no change.
+#   Jan 2026 CPI: originally 2026-02-11, released 2026-02-13 (2026 appropriations lapse).
+# (Dec 2024 ref -> 2025-01-15 ... Nov 2026 ref -> 2026-12-10)
+2025-01-15
+2025-02-12
+2025-03-12
+2025-04-10
+2025-05-13
+2025-06-11
+2025-07-15
+2025-08-12
+2025-09-11
+2025-10-24
+2025-12-18
+2026-01-13
+2026-02-13
+2026-03-11
+2026-04-10
+2026-05-12
+2026-06-10
+2026-07-14
+2026-08-12
+2026-09-11
+2026-10-14
+2026-11-10
+2026-12-10
