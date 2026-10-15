@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-14",
-  "opex_minus_one": false,
+  "date": "2026-10-15",
+  "opex_minus_one": true,
   "vixpiration_minus_one": false,
   "vixpiration": false,
   "vixpiration_plus_one": false,
@@ -8,7 +8,7 @@
   "earlyClose": false,
   "fomc": false,
   "fomcPlusOne": false,
-  "cpi": true,
+  "cpi": false,
   "eom": false,
   "eoq": false,
   "opex": false
