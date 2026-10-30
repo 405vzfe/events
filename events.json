@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-29",
+  "date": "2026-10-30",
   "opex_minus_one": false,
   "vixpiration_minus_one": false,
   "vixpiration": false,
@@ -7,9 +7,9 @@
   "eoq_plus_one": false,
   "earlyClose": false,
   "fomc": false,
-  "fomcPlusOne": true,
+  "fomcPlusOne": false,
   "cpi": false,
-  "eom": false,
+  "eom": true,
   "eoq": false,
   "opex": false
 }
