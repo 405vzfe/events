@@ -1,4 +1,4 @@
-// Hand-maintained event dates that no calendar rule can derive (FOMC, CPI, NYSE early
+// Hand-maintained event dates that no calendar rule can derive (FOMC, CPI, NFP, NYSE early
 // closes). Each file in data/ holds one ISO date per line and states how far it is complete:
 //
 //   # covers through: YYYY-MM-DD
@@ -9,7 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const LISTS = { fomc: 'fomc.txt', cpi: 'cpi.txt', earlyClose: 'early_close.txt' };
+const LISTS = { fomc: 'fomc.txt', cpi: 'cpi.txt', nfp: 'nfp.txt', earlyClose: 'early_close.txt' };
 
 const ISO_DATE = '\\d{4}-\\d{2}-\\d{2}';
 const COVERS_RE = new RegExp(`^#\\s*covers through:\\s*(${ISO_DATE})\\s*$`);

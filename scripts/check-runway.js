@@ -1,5 +1,5 @@
 // Fails the job when data/events.csv, or one of the hand-maintained date lists in
-// data/ (fomc, cpi, early_close), is close to running out or already past it, and when
+// data/ (fomc, cpi, nfp, early_close), is close to running out or already past it, and when
 // the CSV disagrees with a list (a list edited without regenerating the CSV). It runs
 // after the deploy, so a red run never blocks the day's data.
 //

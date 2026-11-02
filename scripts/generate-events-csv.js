@@ -1,5 +1,5 @@
 // Generates data/events.csv: one row per calendar day with OPEX, VIX expiration,
-// month/quarter-boundary, FOMC, CPI and early-close flags.
+// month/quarter-boundary, FOMC, CPI, NFP and early-close flags.
 //
 //   node scripts/generate-events-csv.js <startYear> <endYear> > data/events.csv
 //
@@ -10,8 +10,11 @@
 //                       if the NYSE is closed that day.
 //   monthEnd(m)         last trading day of month m. Flagged eoq in Mar/Jun/Sep/Dec and
 //                       eom in every other month (never both, matching xiles.io).
-//   fomc, cpi,          dates from data/fomc.txt, data/cpi.txt, data/early_close.txt
+//   fomc, cpi, nfp,     dates from data/fomc.txt, data/cpi.txt, data/nfp.txt, data/early_close.txt
 //   earlyClose          (see scripts/date-lists.js). fomcPlusOne is the next trading day.
+//                       cpi_minus_one / nfp_minus_one are the prior trading day. BLS can
+//                       release NFP on an NYSE holiday (Good Friday 2026-04-03), so nfp alone
+//                       may sit on a closed day; every other list date must be a trading day.
 //   *_minus_one         the prior trading day.
 //   *_plus_one          the next trading day.
 //
@@ -167,9 +170,13 @@ function main() {
   for (const [field, list] of Object.entries(readLists())) {
     for (const date of list.dates) {
       const d = new Date(`${date}T00:00:00Z`);
-      if (!isTradingDay(d, holidays)) throw new Error(`${list.file}: ${date} is not an NYSE trading day`);
+      if (field !== 'nfp' && !isTradingDay(d, holidays)) {
+        throw new Error(`${list.file}: ${date} is not an NYSE trading day`);
+      }
+      if (d.getUTCDay() === 0 || d.getUTCDay() === 6) throw new Error(`${list.file}: ${date} is a weekend`);
       mark(d, field);
       if (field === 'fomc') mark(nextTradingDay(d, holidays), 'fomcPlusOne');
+      if (field === 'cpi' || field === 'nfp') mark(prevTradingDay(d, holidays), `${field}_minus_one`);
     }
   }
 
@@ -187,6 +194,9 @@ function main() {
     'eom',
     'eoq',
     'opex',
+    'cpi_minus_one',
+    'nfp',
+    'nfp_minus_one',
   ];
   const lines = [headers.join(',')];
   for (let d = utc(startYear, 0, 1); d.getUTCFullYear() <= endYear; d = addDays(d, 1)) {

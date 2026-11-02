@@ -18,7 +18,10 @@ A one-file JSON feed that tells a consumer which market-event flags apply to the
   "cpi": false,
   "eom": false,
   "eoq": false,
-  "opex": false
+  "opex": false,
+  "cpi_minus_one": false,
+  "nfp": false,
+  "nfp_minus_one": false
 }
 ```
 
@@ -45,6 +48,9 @@ publishes the result to GitHub Pages.
 | `eom` | Last trading day of a month that does not end a quarter. |
 | `eoq` | Last trading day of a quarter (Mar, Jun, Sep, Dec). Never also `eom`. |
 | `opex` | Monthly OPEX: the third Friday. |
+| `cpi_minus_one` | The trading day before `cpi`. |
+| `nfp` | BLS Employment Situation (NFP) release day (`data/nfp.txt`). Can fall on an NYSE holiday (Good Friday). |
+| `nfp_minus_one` | The trading day before `nfp`. |
 
 The camelCase keys mirror https://xiles.io/api/today, with the same names and meanings, so this feed can
 stand in for it. They match the backtester's `input_spx_ohlc.csv` (FOMC/CPI/OPEX code 100, FOMC
@@ -61,7 +67,7 @@ measured in **trading days, not calendar days**, so a flag never lands on a mark
 node scripts/generate-events-csv.js 2025 2035 > data/events.csv
 ```
 
-The generator derives every flag from the NYSE holiday calendar except `fomc`, `cpi`, and
+The generator derives every flag from the NYSE holiday calendar except `fomc`, `cpi`, `nfp`, and
 `earlyClose`. Those come from the hand-maintained lists in `data/`, which have one date per line
 and a `# covers through: YYYY-MM-DD` header. When the Fed, BLS, or NYSE publish a new year, add the
 dates, bump the header, and regenerate. The generator fails on a listed date that is not a
