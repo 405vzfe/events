@@ -1,6 +1,6 @@
 # NYSE 1:00 pm early closes. Feed key: earlyClose.
 # covers through: 2028-12-31
-# source: https://www.nyse.com/markets/hours-calendars (current page, covers 2026-2028, fetched 2026-10-02)
+# source: https://www.nyse.com/markets/hours-calendars (current page, covers 2026-2028, fetched 2026-10-02; re-checked 2026-11-10: unchanged, no 2029 yet)
 # source: http://web.archive.org/web/20250527233818/https://www.nyse.com/markets/hours-calendars (2025 footnotes)
 # All early closes are 1:00 p.m. ET (1:15 p.m. eligible options).
 # Not early closes, for reference: 2026-07-03 holiday (Jul 4 observed, no Jul 2 early close); 2027-07-05 and

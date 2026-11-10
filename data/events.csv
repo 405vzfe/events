@@ -1119,8 +1119,8 @@ date,opex_minus_one,vixpiration_minus_one,vixpiration,vixpiration_plus_one,eoq_p
 2028-01-23,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
 2028-01-24,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
 2028-01-25,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
-2028-01-26,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
-2028-01-27,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
+2028-01-26,false,false,false,false,false,false,true,false,false,false,false,false,false,false,false
+2028-01-27,false,false,false,false,false,false,false,true,false,false,false,false,false,false,false
 2028-01-28,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
 2028-01-29,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false
 2028-01-30,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false

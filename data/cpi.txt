@@ -5,6 +5,7 @@
 #   bls.gov/schedule/news_release/cpi.htm if a lapse is in the news.
 # covers through: 2027-12-31
 # source: https://www.bls.gov/schedule/news_release/cpi.htm (current schedule fetched 2026-11-02: Oct 2026 ref month -> Nov 2027 ref month)
+#   Re-checked 2026-11-10: unchanged. BLS has not published 2028 yet.
 # source: https://www.bls.gov/bls/news-release/cpi.htm (archive of actual CPI releases, 2025-2026)
 # source: https://www.bls.gov/bls/2025-lapse-revised-release-dates.htm (revised dates after 2025 and 2026 appropriations lapses)
 # source: https://www.bls.gov/bls/092025-cpi-reschedule-notice.htm (Sep 2025 CPI rescheduled to 2025-10-24)
