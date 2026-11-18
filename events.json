@@ -1,8 +1,8 @@
 {
-  "date": "2026-11-17",
+  "date": "2026-11-18",
   "opex_minus_one": false,
-  "vixpiration_minus_one": true,
-  "vixpiration": false,
+  "vixpiration_minus_one": false,
+  "vixpiration": true,
   "vixpiration_plus_one": false,
   "eoq_plus_one": false,
   "earlyClose": false,
