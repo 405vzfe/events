@@ -1,5 +1,5 @@
 {
-  "date": "2026-11-20",
+  "date": "2026-11-21",
   "opex_minus_one": false,
   "vixpiration_minus_one": false,
   "vixpiration": false,
@@ -11,7 +11,7 @@
   "cpi": false,
   "eom": false,
   "eoq": false,
-  "opex": true,
+  "opex": false,
   "cpi_minus_one": false,
   "nfp": false,
   "nfp_minus_one": false
