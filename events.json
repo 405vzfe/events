@@ -1,11 +1,11 @@
 {
-  "date": "2026-11-26",
+  "date": "2026-11-27",
   "opex_minus_one": false,
   "vixpiration_minus_one": false,
   "vixpiration": false,
   "vixpiration_plus_one": false,
   "eoq_plus_one": false,
-  "earlyClose": false,
+  "earlyClose": true,
   "fomc": false,
   "fomcPlusOne": false,
   "cpi": false,
